@@ -170,3 +170,4 @@ cython_debug/
 #InspireMusic
 exp/
 pretrained_models/
+InspireMusic-1.5B-24kHz/
