@@ -21,6 +21,9 @@ from .utils import _check_checksum, _linear_overlap_add, _get_checkpoint_url
 
 ROOT_URL = 'https://dl.fbaipublicfiles.com/encodec/v0/'
 
+# Alternative: Use local path if models are downloaded
+# ROOT_URL = '/path/to/local/models/'  # Uncomment and modify for offline use
+
 EncodedFrame = tp.Tuple[torch.Tensor, tp.Optional[torch.Tensor]]
 
 

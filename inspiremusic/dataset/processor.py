@@ -21,8 +21,8 @@ from torch.nn.utils.rnn import pad_sequence
 import torch.nn.functional as F
 import numpy as np
 import re
-
-torchaudio.set_audio_backend('soundfile')
+#新版自动处理音频后端
+#torchaudio.set_audio_backend('soundfile')
 
 AUDIO_FORMAT_SETS = {'flac', 'mp3', 'm4a', 'ogg', 'opus', 'wav', 'wma'}
 CHORUS = {"intro": 0, "chorus": 1, "verse1": 2, "verse2": 3, "verse": 2,

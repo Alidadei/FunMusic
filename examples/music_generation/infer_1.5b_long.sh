@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 . ./path.sh || exit 1;
-
+import os
 convert_path() {
   if command -v cygpath &> /dev/null; then
     cygpath -w "$1"
@@ -26,7 +26,7 @@ convert_path() {
 OS="$(uname -s)"
 
 export TOKENIZERS_PARALLELISM=False
-
+start_time=$(date +%m%d-%H%M)
 model_name="InspireMusic-1.5B-Long"
 pretrained_model_dir=../../pretrained_models/${model_name}
 dataset_name=samples
@@ -52,12 +52,12 @@ case "$OS" in
           --output_sample_rate 48000 \
           --min_generate_audio_seconds 5.0 \
           --max_generate_audio_seconds 180.0 \
-          --result_dir `pwd`/exp/${model_name}/${task}_${expr_name}
+          --result_dir `pwd`/exp/${model_name}/${start_time}/${task}_${expr_name}
     #   if use InspireMusic-xxxx-24kHz model, please set output sample rate to 24kHz
     #      --output_sample_rate 24000 \
     #   use fast inference mode
     #      --fast # fast mode without flow matching
-      echo `pwd`/exp/${model_name}/${task}_${expr_name}
+      echo `pwd`/exp/${model_name}/${start_time}/${task}_${expr_name}
     done
     ;;
   CYGWIN*|MINGW*|MSYS*)
@@ -78,12 +78,12 @@ case "$OS" in
           --output_sample_rate 48000 \
           --min_generate_audio_seconds 5.0 \
           --max_generate_audio_seconds 180.0 \
-          --result_dir exp\${model_name}\${task}_${expr_name}
+          --result_dir exp\${model_name}\${start_time}\${task}_${expr_name}
     #   if use InspireMusic-xxxx-24kHz model, please set output sample rate to 24kHz
     #      --output_sample_rate 24000 \
     #   use fast inference mode
     #      --fast # fast mode without flow matching
-      echo exp\${model_name}\${task}_${expr_name}
+      echo exp\${model_name}\${start_time}\${task}_${expr_name}
     done
     ;;
   *)

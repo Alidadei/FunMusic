@@ -15,9 +15,15 @@
 import os
 
 os.system('nvidia-smi')
-os.system('apt update -y && apt-get install -y apt-utils && apt install -y unzip')
+# Optional: apt install (needs sudo). Commented out to avoid permission errors on WSL/containers.
+# os.system('apt update -y && apt-get install -y apt-utils && apt install -y unzip')
 os.environ['PYTHONPATH'] = 'third_party/Matcha-TTS'
-os.system('mkdir pretrained_models && cd pretrained_models && git clone https://huggingface.co/FunAudioLLM/InspireMusic-Base.git &&git clone https://huggingface.co/FunAudioLLM/InspireMusic-1.5B-Long.git &&git clone https://huggingface.co/FunAudioLLM/InspireMusic-1.5B.git &&git clone https://huggingface.co/FunAudioLLM/InspireMusic-1.5B-24kHz.git &&git clone https://huggingface.co/FunAudioLLM/InspireMusic-Base-24kHz.git && for i in InspireMusic-Base InspireMusic-Base-24kHz InspireMusic-1.5B InspireMusic-1.5B-24kHz InspireMusic-1.5B-Long; do sed -i -e "s/\.\.\/\.\.\///g" ${i}/inspiremusic.yaml; done && cd ..')
+if not os.path.exists("pretrained_models"):
+	if not os.path.exists('pretrained_models'):
+		os.makedirs('pretrained_models', exist_ok=True)
+		os.system('cd pretrained_models && git clone https://huggingface.co/FunAudioLLM/InspireMusic-Base.git && git clone https://huggingface.co/FunAudioLLM/InspireMusic-1.5B-Long.git && git clone https://huggingface.co/FunAudioLLM/InspireMusic-1.5B.git && git clone https://huggingface.co/FunAudioLLM/InspireMusic-1.5B-24kHz.git && git clone https://huggingface.co/FunAudioLLM/InspireMusic-Base-24kHz.git && for i in InspireMusic-Base InspireMusic-Base-24kHz InspireMusic-1.5B InspireMusic-1.5B-24kHz InspireMusic-1.5B-Long; do sed -i -e "s/\.\.\/\.\.\///g" ${i}/inspiremusic.yaml; done')
+	else:
+		print('pretrained_models already exists, skip cloning.')
 
 import sys
 import torch
@@ -201,7 +207,8 @@ def main():
 										  max_generate_audio_seconds],
 								  outputs=music_output)
 		t2m_examples = gr.Examples(examples=DEMO_TEXT_PROMPTS, inputs=[text_input])
-	demo.launch()
+	# Expose on all interfaces; disable share to avoid frpc download and localhost/share errors.
+	demo.launch(server_name="0.0.0.0", server_port=7861, share=False)
 
 if __name__ == '__main__':
 	os.makedirs(AUDIO_PROMPT_DIR, exist_ok=True)
