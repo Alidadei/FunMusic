@@ -171,3 +171,4 @@ cython_debug/
 exp/
 pretrained_models/
 InspireMusic-1.5B-24kHz/
+examples/music_generation/audio_prompt/1.wav
